@@ -1,0 +1,40 @@
+stages:
+  query_databases:
+    cmd: conda run -n kp_acquisition python pipelines/00_acquisition/query_databases.py
+    deps: [pipelines/00_acquisition/query_databases.py]
+    outs: [data/metadata/assembly_manifest.tsv, data/metadata/reads_manifest.tsv]
+
+  assembly_qc:
+    cmd: conda run -n kp_bio python pipelines/01_qc/run_assembly_qc.py
+    deps: [data/assemblies/, data/external/HS11286_reference.fasta]
+    outs: [data/processed/assemblies_passed_qc/, data/processed/qc/]
+
+  genotyping:
+    cmd: conda run -n kp_bio python pipelines/02_genotyping/run_kleborate.py
+    deps: [data/processed/assemblies_passed_qc/]
+    outs: [data/processed/virulence/kleborate_classified.tsv]
+
+  phylogenetics:
+    cmd: conda run -n kp_bio python pipelines/03_phylogenetics/run_phylogenetics.py
+    deps: [data/processed/assemblies_passed_qc/, data/processed/virulence/kleborate_classified.tsv]
+    outs: [data/processed/phylogenetics/]
+
+  cgmlst:
+    cmd: conda run -n kp_bio python pipelines/04_cgmlst/run_cgmlst.py
+    deps: [data/processed/assemblies_passed_qc/, data/external/cgmlst_scheme/]
+    outs: [data/processed/cgmlst/]
+
+  plasmids:
+    cmd: conda run -n kp_bio python pipelines/05_plasmids/run_plasmid_analysis.py
+    deps: [data/processed/assemblies_passed_qc/]
+    outs: [data/processed/plasmids/]
+
+  ml_pipeline:
+    cmd: conda run -n kp_ml python pipelines/06_ml/run_ml_pipeline.py
+    deps: [data/processed/virulence/kleborate_classified.tsv, data/processed/cgmlst/clonal_clusters.tsv]
+    outs: [data/processed/ml/, reports/ml/]
+
+  visualizations:
+    cmd: conda run -n kp_bio Rscript pipelines/07_visualization/plot_all.R
+    deps: [data/processed/virulence/, data/processed/cgmlst/, data/processed/phylogenetics/]
+    outs: [reports/figures/]

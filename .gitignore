@@ -1,0 +1,12 @@
+*.pyc
+__pycache__/
+.env
+*.log
+data/raw_reads/
+data/assemblies/
+*.fastq.gz
+*.bam
+mlruns/
+.dvc/cache/
+*.DS_Store
+*.sra
