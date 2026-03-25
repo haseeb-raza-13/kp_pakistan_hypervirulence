@@ -1,0 +1,15 @@
+name: kp_acquisition
+channels: [conda-forge, bioconda, defaults]
+dependencies:
+  - python=3.10
+  - apache-airflow=2.8.1
+  - sra-tools=3.1.0
+  - entrez-direct
+  - requests
+  - pandas=2.2.0
+  - biopython=1.83
+  - tqdm
+  - dvc
+  - mlflow=2.11.0
+  - pip:
+    - ncbi-datasets-pylib
