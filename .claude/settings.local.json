@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(conda env:*)",
+      "Bash(conda search:*)",
+      "Bash(pip index:*)",
+      "Bash(curl -s https://pypi.org/pypi/digis/json)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(list\\(d.get\\(''''releases'''',{}\\).keys\\(\\)\\)[:5]\\)\")"
+    ]
+  }
+}
